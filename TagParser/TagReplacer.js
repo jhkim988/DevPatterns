@@ -19,7 +19,7 @@ class TagReplacer {
                     const match = attrValue.match(this.regex);
                     match && match.forEach(val => {
                         let sub = val.substring(2, val.length-1);
-                        attrValue = attrValue.replaceAll(`${val}`, param[sub]);
+                        attrValue = attrValue.replaceAll(val, param[sub]);
                     });
                     crnt.setAttribute(attrName, attrValue);
                 });
