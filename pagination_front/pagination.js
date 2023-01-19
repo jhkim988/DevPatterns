@@ -59,8 +59,8 @@ class Pagination {
             }
             p++;
         });
-
     }
+    
     getMaxPage() {
         this.totalCount = parseInt(buttonWrapper.querySelector(".pageButtonSet").dataset.totalcount);
         return this.maxPage = parseInt(this.totalCount/this.numButton);
