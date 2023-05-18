@@ -17,3 +17,9 @@ const getCache = async (url, filter) => {
     const response = await cache.open('v1').match(request)
     return await response.resultData.filter(filter);
 }
+
+// 3. delete cache
+const deleteCache = async (url) => {
+    const request = new Request(url);
+    await cache.open('v1').delete(request);
+}
