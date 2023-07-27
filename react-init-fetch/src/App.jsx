@@ -2,9 +2,26 @@ import PropTypes from "prop-types";
 import { InitialDataProvider } from "./apis/InitialDataProvider";
 import { useInitialData } from "./apis/useInitialData";
 
+// out of component or useMemo
+const initReq = {
+  test1: {
+    id: "test1",
+    url: "test URL1",
+    args: "?id=testId",
+  },
+  test2: {
+    id: "test2",
+    url: "test URL2",
+    args: {
+      param1: "frog",
+      param2: "jump",
+    },
+  },
+};
+
 function App() {
   return (
-    <InitialDataProvider>
+    <InitialDataProvider config={initReq}>
       <Test1 />
       <Test2 />
       <Test3>
