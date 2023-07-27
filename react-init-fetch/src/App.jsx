@@ -1,27 +1,28 @@
 import PropTypes from "prop-types";
 import { InitialDataProvider } from "./apis/InitialDataProvider";
 import { useInitialData } from "./apis/useInitialData";
+import { fetchMock } from "./apis/fetchMock";
 
 // out of component or useMemo
-const initReq = {
-  test1: {
-    id: "test1",
-    url: "test URL1",
-    args: "?id=testId",
-  },
-  test2: {
-    id: "test2",
-    url: "test URL2",
-    args: {
-      param1: "frog",
-      param2: "jump",
-    },
-  },
+const promises = [
+  fetchMock("/localhost/test0", undefined, "mock response test0"),
+  fetchMock(
+    "/localhost/test1",
+    { param1: "frog", param2: "jump" },
+    "mock response test1"
+  ),
+];
+
+const callback = (resArr, set) => {
+  const data = {};
+  data.test0 = resArr[0];
+  data.test1 = resArr[1];
+  set(data);
 };
 
 function App() {
   return (
-    <InitialDataProvider config={initReq}>
+    <InitialDataProvider promises={promises} callback={callback}>
       <Test1 />
       <Test2 />
       <Test3>
@@ -32,8 +33,8 @@ function App() {
 }
 
 const Test1 = () => {
-  const data = useInitialData();
-  console.log("Test1 Render", data);
+  const { test0 } = useInitialData();
+  console.log("Test1 Render", test0);
   return <div>test1</div>;
 };
 
@@ -57,8 +58,8 @@ Test3.propTypes = {
 };
 
 const Test4 = () => {
-  const data = useInitialData();
-  console.log("Test4 Render", data);
+  const { test1 } = useInitialData();
+  console.log("Test4 Render", test1);
   return <div>test4</div>;
 };
 export default App;

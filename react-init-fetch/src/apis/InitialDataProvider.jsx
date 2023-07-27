@@ -1,23 +1,14 @@
 import React, { useEffect, useState, useMemo } from "react";
 import PropTypes from "prop-types";
-import { fetchMock as fetch } from "./fetchMock";
 
 export const InitialDataContext = React.createContext({});
 
-export const InitialDataProvider = ({ children, config }) => {
+export const InitialDataProvider = ({ children, promises, callback }) => {
   const [data, setData] = useState({});
 
   useEffect(() => {
-    Promise.all(
-      Object.values(config).map((req) => fetch(req.url, req.args))
-    ).then((resArr) => {
-      const newData = {};
-      Object.entries(config).forEach(
-        (el, idx) => (newData[el[0]] = resArr[idx])
-      );
-      setData(newData);
-    });
-  }, []);
+    Promise.all(promises).then((resArr) => callback(resArr, setData));
+  }, [callback, promises]);
 
   const dataMemo = useMemo(() => {
     return data;
@@ -32,11 +23,11 @@ export const InitialDataProvider = ({ children, config }) => {
 
 InitialDataProvider.propTypes = {
   children: PropTypes.arrayOf(PropTypes.element),
-  config: PropTypes.objectOf(
+  promises: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.string,
-      url: PropTypes.string,
-      args: PropTypes.any,
+      then: PropTypes.func.isRequired,
+      catch: PropTypes.func.isRequired,
     })
   ),
+  callback: PropTypes.func,
 };
